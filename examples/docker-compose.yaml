@@ -1,0 +1,16 @@
+version: "3"
+services:
+  mysql-bkup:
+    image: jkaninda/mysql-bkup
+    container_name: mysql-bkup
+    command:
+      - /bin/sh
+      - -c
+      - bkup --operation backup --dbname database_name
+    volumes:
+      - ./backup:/backup
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=mysqlhost
+      - DB_USERNAME=userName
+      - DB_PASSWORD=${DB_PASSWORD}

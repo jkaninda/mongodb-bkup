@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: db-bkup-job
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mysql-bkup
+            image: jkaninda/mysql-bkup
+            securityContext:
+              privileged: true
+            command:
+            - /bin/sh
+            - -c
+            - bkup --operation backup --storage s3 --path /custom_path
+            env:
+              - name: DB_PORT
+                value: "3306" 
+              - name: DB_HOST
+                value: ""
+              - name: DB_NAME
+                value: ""
+              - name: DB_USERNAME
+                value: ""
+              # Please use secret!
+              - name: DB_PASSWORD
+                value: "password"
+              - name: ACCESS_KEY
+                value: ""
+              - name: SECRET_KEY
+                value: ""
+              - name: BUCKETNAME
+                value: ""
+              - name: S3_ENDPOINT
+                value: "https://s3.us-west-2.amazonaws.com"
+          restartPolicy: Never
